@@ -114,6 +114,28 @@ function AdBanner() {
   )
 }
 
+// ─── Social Ad Bar Component ───────────────────────────────
+function SocialAdBar() {
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    const existing = document.querySelector('script[data-ad-social-bar]')
+    if (existing) return
+    const script = document.createElement('script')
+    script.src = 'https://pl29190181.profitablecpmratenetwork.com/d7/31/79/d73179a9f70afbd2417bbc7e5334f9ac.js'
+    script.async = true
+    script.setAttribute('data-cfasync', 'false')
+    script.setAttribute('data-ad-social-bar', 'true')
+    document.body.appendChild(script)
+    return () => { script.remove() }
+  }, [])
+
+  return (
+    <div className="w-full max-w-6xl mx-auto my-3 px-4">
+      <div id="container-d73179a9f70afbd2417bbc7e5334f9ac" />
+    </div>
+  )
+}
+
 // ─── DANA Logo Component ───────────────────────────────────
 function DanaLogo({ size = 24 }: { size?: number }) {
   return (
@@ -1318,6 +1340,7 @@ export default function HomePage() {
               <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-4">
                 <HeroSlider />
                 <AdBanner />
+                <SocialAdBar />
               </div>
               <GameGrid />
             </motion.div>
