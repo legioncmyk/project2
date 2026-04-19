@@ -6,6 +6,8 @@ export interface Nominal {
   name: string
   price: number
   originalPrice: number | null
+  category: string
+  label: string
 }
 
 export interface Game {

@@ -26,6 +26,8 @@ model Nominal {
   name          String
   price         Float
   originalPrice Float?
+  category      String  @default("")
+  label         String  @default("")
   createdAt     DateTime @default(now())
 }
 

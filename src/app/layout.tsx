@@ -19,7 +19,8 @@ export const metadata: Metadata = {
   keywords: "top up game murah, diamond ml, ff murah, top up cepat, top up pubg mobile, top up free fire, top up mobile legends, top up genshin impact, top up valorant, zall topup",
   authors: [{ name: "Zall Store" }],
   icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>",
+    icon: '/favicon.svg',
+    apple: '/logo.png',
   },
   openGraph: {
     title: "Zall TopUp - Top Up Game Murah & Cepat",
@@ -27,6 +28,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "id_ID",
     siteName: "Zall TopUp",
+    images: [
+      {
+        url: '/logo.png',
+        width: 1024,
+        height: 1024,
+        alt: 'ZallTopUp Logo',
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",

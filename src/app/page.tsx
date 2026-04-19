@@ -165,9 +165,7 @@ function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           <button onClick={() => { setCurrentView('home'); window.scrollTo({ top: 0, behavior: 'smooth' }) }} className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-green-400 flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:shadow-blue-500/40 transition-shadow">
-              <Zap className="w-5 h-5 text-white" />
-            </div>
+            <Image src="/logo.png" alt="ZallTopUp" width={36} height={36} className="rounded-lg shadow-lg shadow-blue-500/25 group-hover:shadow-blue-500/40 transition-shadow" />
             <div className="flex flex-col">
               <span className="text-lg font-bold text-white leading-none tracking-tight">Zall<span className="text-blue-400">TopUp</span></span>
               <span className="text-[10px] text-blue-300/70 leading-none">Game Top Up Murah</span>
@@ -396,6 +394,7 @@ function TopUpForm() {
   const [copiedDana, setCopiedDana] = useState(false)
   const [orderSuccess, setOrderSuccess] = useState(false)
   const [detailImgError, setDetailImgError] = useState(false)
+  const [nominalCategory, setNominalCategory] = useState('all')
 
   if (!selectedGame) return null
 
@@ -524,19 +523,79 @@ function TopUpForm() {
 
               <div className="space-y-3">
                 <h3 className="text-sm font-medium text-slate-700">Pilih Nominal</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-1">
-                  {selectedGame.nominals.map(nom => (
-                    <button key={nom.id} onClick={() => setSelectedNominal(nom)} className={`relative p-3 rounded-xl border-2 text-left transition-all duration-200 ${selectedNominal?.id === nom.id ? 'border-blue-500 bg-blue-50 shadow-md shadow-blue-500/10' : 'border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm'}`}>
-                      {nom.originalPrice && nom.originalPrice > nom.price && <Badge className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] px-1.5 py-0.5">-{Math.round((1 - nom.price / nom.originalPrice) * 100)}%</Badge>}
-                      <p className="text-sm font-semibold text-slate-800">{nom.name}</p>
-                      <div className="mt-1">
-                        <p className="text-sm font-bold text-blue-600">{formatRupiah(nom.price)}</p>
-                        {nom.originalPrice && nom.originalPrice > nom.price && <p className="text-[11px] text-slate-400 line-through">{formatRupiah(nom.originalPrice)}</p>}
+
+                {/* Category Tabs */}
+                {(() => {
+                  const categories = Array.from(new Set(selectedGame.nominals.map(n => n.category).filter(Boolean)))
+                  const filteredNominals = nominalCategory === 'all'
+                    ? selectedGame.nominals
+                    : selectedGame.nominals.filter(n => n.category === nominalCategory)
+
+                  return (
+                    <>
+                      {categories.length > 1 && (
+                        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                          <button
+                            onClick={() => { setNominalCategory('all'); setSelectedNominal(null) }}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all shrink-0 ${nominalCategory === 'all' ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}
+                          >
+                            Semua
+                          </button>
+                          {categories.map(cat => (
+                            <button
+                              key={cat}
+                              onClick={() => { setNominalCategory(cat); setSelectedNominal(null) }}
+                              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all shrink-0 ${nominalCategory === cat ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}
+                            >
+                              {cat}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[500px] overflow-y-auto pr-1">
+                        {filteredNominals.map(nom => (
+                          <button key={nom.id} onClick={() => setSelectedNominal(nom)} className={`relative p-3 rounded-xl border-2 text-left transition-all duration-200 ${selectedNominal?.id === nom.id ? 'border-blue-500 bg-blue-50 shadow-md shadow-blue-500/10' : 'border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm'}`}>
+                            {/* Label Badge */}
+                            {nom.label && (
+                              <Badge className={`absolute -top-2.5 left-2 text-[9px] font-bold px-2 py-0.5 z-10 ${
+                                nom.label === 'BEST SELLER' ? 'bg-orange-500 text-white' :
+                                nom.label === 'HEMAT' ? 'bg-emerald-500 text-white' :
+                                nom.label === 'POPULER' ? 'bg-blue-500 text-white' :
+                                'bg-slate-500 text-white'
+                              }`}>
+                                {nom.label === 'BEST SELLER' ? '🔥 ' : nom.label === 'HEMAT' ? '💎 ' : nom.label === 'POPULER' ? '🎟️ ' : ''}{nom.label}
+                              </Badge>
+                            )}
+                            {nom.originalPrice && nom.originalPrice > nom.price && (
+                              <Badge className="absolute -top-2.5 -right-2 bg-red-500 text-white text-[9px] px-1.5 py-0.5 z-10">
+                                -{Math.round((1 - nom.price / nom.originalPrice) * 100)}%
+                              </Badge>
+                            )}
+                            <p className={`text-sm font-semibold text-slate-800 ${nom.label ? 'mt-2' : ''}`}>{nom.name}</p>
+                            <div className="mt-1">
+                              <p className="text-sm font-bold text-blue-600">{formatRupiah(nom.price)}</p>
+                              {nom.originalPrice && nom.originalPrice > nom.price && (
+                                <p className="text-[11px] text-slate-400 line-through">{formatRupiah(nom.originalPrice)}</p>
+                              )}
+                            </div>
+                            {selectedNominal?.id === nom.id && (
+                              <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+                                <Check className="w-3 h-3 text-white" />
+                              </div>
+                            )}
+                          </button>
+                        ))}
                       </div>
-                      {selectedNominal?.id === nom.id && <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center"><Check className="w-3 h-3 text-white" /></div>}
-                    </button>
-                  ))}
-                </div>
+
+                      {filteredNominals.length === 0 && (
+                        <div className="text-center py-8 text-slate-400">
+                          <p className="text-sm">Tidak ada item untuk kategori ini</p>
+                        </div>
+                      )}
+                    </>
+                  )
+                })()}
               </div>
             </CardContent>
           </Card>
@@ -682,7 +741,7 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-green-400 flex items-center justify-center"><Zap className="w-4 h-4 text-white" /></div>
+              <Image src="/logo.png" alt="ZallTopUp" width={32} height={32} className="rounded-lg" />
               <span className="font-bold text-lg">Zall<span className="text-blue-400">TopUp</span></span>
             </div>
             <p className="text-sm text-slate-400">Top up game murah dan cepat. Pembayaran mudah via DANA. Proses cepat dan aman.</p>

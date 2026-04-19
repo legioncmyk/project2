@@ -140,3 +140,35 @@ Stage Summary:
 - Slider banners use beautiful gradient backgrounds
 - Image error handling with graceful fallback to category emojis
 - next.config.ts properly configured for any future external image needs
+
+---
+Task ID: 5
+Agent: Main
+Task: Real game images, real market prices, categories, labels, favicon, logo
+
+Work Log:
+- Generated 65 AI game cover images (1024x1024 PNG) using z-ai image generation CLI
+- All SVG placeholders replaced with real AI-generated PNG images
+- Database updated: all 65 games now point to /games/{slug}.png
+- Created favicon.svg (blue-green gradient lightning bolt Z) and logo.png (AI-generated)
+- Updated layout.tsx with favicon and apple-touch-icon meta
+- Updated Header and Footer to use real logo.png instead of icon component
+- Added Prisma schema fields: Nominal.category (String), Nominal.label (String)
+- Deleted all 412 old nominals and inserted 565 new nominals with real market prices
+- Categories per game: Diamond/UC/VP/etc + Pass + Membership (like Codashop)
+- Labels applied: BEST SELLER (mid-tier popular), HEMAT (bulk discount), POPULER (passes)
+- Free Fire example: 13 Diamonds + 2 Booyah Pass + 2 Membership = 15 items
+- PUBG: 6 UC + 3 Royale Pass + 2 Prime Plus = 11 items
+- MLBB: 9 Diamond + 2 WDP + 2 Starlight = 13 items
+- Updated UI: category tabs above nominal grid, label badges (🔥BEST SELLER, 💎HEMAT, 🎟️POPULER)
+- Reordered games: Free Fire, PUBG Mobile, Mobile Legends at top
+- Store interface updated with category and label fields on Nominal
+
+Stage Summary:
+- 65 real game images (AI-generated PNGs, no text/icons)
+- 565 nominals with real market prices across all 65 games
+- Categories: Diamond, Pass, Membership per game (Codashop-style)
+- Labels: BEST SELLER (67), HEMAT (95), POPULER (147)
+- Favicon + logo created and integrated in header/footer
+- Category tabs in nominal selection UI
+- Free Fire, PUBG, MLBB at top of game list
